@@ -13,19 +13,19 @@ namespace Keepr.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class KeepsController : ControllerBase
+  public class VaultsController : ControllerBase
   {
-    private readonly KeepsService _ks;
-    public KeepsController(KeepsService ks)
+    private readonly VaultsService _vs;
+    public VaultsController(VaultsService ks)
     {
-      _ks = ks;
+      _vs = ks;
     }
     [HttpGet]
     public ActionResult<IEnumerable<Keep>> Get()
     {
       try
       {
-        return Ok(_ks.Get());
+        return Ok(_vs.Get());
       }
       catch (Exception e)
       {
@@ -37,7 +37,7 @@ namespace Keepr.Controllers
     {
       try
       {
-        return Ok(_ks.GetById(Id));
+        return Ok(_vs.GetById(Id));
       }
       catch (Exception e)
       {
@@ -53,7 +53,7 @@ namespace Keepr.Controllers
       {
         string userId = findUserInfo();
         newKeep.UserId = userId;
-        return Ok(_ks.Create(newKeep));
+        return Ok(_vs.Create(newKeep));
       }
       catch (Exception e)
       {
@@ -68,7 +68,7 @@ namespace Keepr.Controllers
       try
       {
         string userId = findUserInfo();
-        return Ok(_ks.Delete(id, userId));
+        return Ok(_vs.Delete(id, userId));
       }
       catch (Exception e)
       {
