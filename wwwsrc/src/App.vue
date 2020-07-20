@@ -13,6 +13,9 @@ export default {
   async beforeCreate() {
     await onAuth();
     this.$store.dispatch("setBearer", this.$auth.bearer);
+    this.$store.dispatch("setUser", this.$auth.user);
+    this.$store.dispatch("getMyVaults");
+    this.$store.dispatch("getMyKeeps");
   },
   components: {
     Navbar

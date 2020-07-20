@@ -45,5 +45,28 @@ namespace Keepr.Repositories
       int affectedRows = _db.Execute(sql, new { id, userId });
       return affectedRows == 1;
     }
+
+    internal Keep GetByUserId(string userId)
+    {
+      string sql = "SELECT * FROM keeps WHERE userId = @userId";
+      return _db.QueryFirstOrDefault<Keep>(sql, new { userId });
+    }
+
+    internal Keep Edit(Keep original)
+    {
+      string sql = @"
+        UPDATE keeps
+        SET
+            name = @Name,
+            description = @Description,
+            img = @Img,
+            isPrivate = @IsPrivate,
+            views = @Views,
+            shares = @Shares,
+            keeps = @Keeps
+        WHERE id = @Id;
+        SELECT * FROM keeps WHERE id = @id;";
+      return _db.QueryFirstOrDefault<Keep>(sql, original);
+    }
   }
 }

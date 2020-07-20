@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using Keepr.Models;
 using Keepr.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -17,19 +19,37 @@ namespace Keepr.Controllers
       _kvs = kvs;
     }
 
-    //POST
-    [HttpPost]
-    public ActionResult<DTOVaultKeep> Post([FromBody] DTOVaultKeep newDTOVaultKeep)
+    [HttpGet]
+    public ActionResult<IEnumerable<VaultKeepViewModel>> Get([FromBody] int vaultId)
     {
       try
       {
-        return Ok(_kvs.Create(newDTOVaultKeep));
+        string userId = findUserInfo();
+        return Ok(_kvs.GetKeepsByVaultId(userId, vaultId));
       }
-      catch (Exception e)
+      catch (System.Exception err)
       {
-        return BadRequest(e.Message);
+        return BadRequest(err.Message);
       }
     }
+
+    //POST
+    [HttpPost]
+
+
+    public ActionResult<DTOVaultKeep> Create([FromBody] DTOVaultKeep newDTOVaultKeep)
+    {
+      try
+      {
+        newDTOVaultKeep.UserId = findUserInfo();
+        return Ok(_kvs.Create(newDTOVaultKeep));
+      }
+      catch (System.Exception err)
+      {
+        return BadRequest(err.Message);
+      }
+    }
+
     //DEL
     [HttpDelete("{id}")]
     public ActionResult<DTOVaultKeep> Delete(int id)
@@ -42,6 +62,10 @@ namespace Keepr.Controllers
       {
         return BadRequest(e.Message);
       }
+    }
+    string findUserInfo()
+    {
+      return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
     }
   }
 }

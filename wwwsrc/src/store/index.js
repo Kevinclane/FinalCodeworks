@@ -19,6 +19,7 @@ export default new Vuex.Store({
   state: {
     user: {},
     publicKeeps: [],
+    myKeeps: [],
     activeKeep: {},
     vaults: []
   },
@@ -35,6 +36,9 @@ export default new Vuex.Store({
     },
     setActiveKeep(state, keep) {
       state.activeKeep = keep
+    },
+    setMyKeeps(state, keeps) {
+      state.myKeeps = keeps
     },
 
     //#endregion
@@ -83,6 +87,21 @@ export default new Vuex.Store({
         console.error(error)
       }
     },
+    async getMyKeeps({ commit }) {
+      try {
+        let res = await api.get("keeps/user")
+        commit("setMyKeeps", res.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async deleteKeep({ }, id) {
+      await api.delete("keeps/" + id)
+      router.push({ name: "home" });
+    },
+    // async getKeepsByVaultId({commit}, vaultId){
+    //   let res = await api.get("keeps/")
+    // },
 
     //#endregion
 

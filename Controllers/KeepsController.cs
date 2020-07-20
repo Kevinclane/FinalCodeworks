@@ -32,12 +32,44 @@ namespace Keepr.Controllers
         return BadRequest(e.Message);
       };
     }
+
+    [HttpGet("user")]
+    [Authorize]
+    public ActionResult<IEnumerable<Keep>> GetKeepsByUser()
+    {
+      try
+      {
+        string userId = findUserInfo();
+        return Ok(_ks.GetByUserId(userId));
+      }
+      catch (System.Exception err)
+      {
+        return BadRequest(err.Message);
+      }
+    }
+
     [HttpGet("{Id}")]
     public ActionResult<Keep> Get(int Id)
     {
       try
       {
         return Ok(_ks.GetById(Id));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+    [HttpPut("{id}")]
+    [Authorize]
+    public ActionResult<Keep> Edit([FromBody] Keep newKeep, int id)
+    {
+      try
+      {
+        string userId = findUserInfo();
+        newKeep.Id = id;
+        return Ok(_ks.Edit(newKeep, userId));
       }
       catch (Exception e)
       {

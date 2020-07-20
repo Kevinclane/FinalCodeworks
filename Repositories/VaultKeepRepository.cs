@@ -21,15 +21,16 @@ namespace Keepr.Repositories
       return _db.QueryFirstOrDefault<DTOVaultKeep>(sql, new { Id });
     }
 
-    internal int Create(DTOVaultKeep newDTOVaultKeep)
+    internal DTOVaultKeep Create(DTOVaultKeep newVaultKeep)
     {
       string sql = @"
         INSERT INTO vaultkeeps
-        (kitId, legoId)
+        (keepId, userId, vaultId)
         VALUES
-        (@KitId, @LegoId);
+        (@keepId, @UserId, @VaultId);
         SELECT LAST_INSERT_ID();";
-      return _db.ExecuteScalar<int>(sql, newDTOVaultKeep);
+      newVaultKeep.Id = _db.ExecuteScalar<int>(sql, newVaultKeep);
+      return newVaultKeep;
     }
 
     internal void Delete(int Id)
@@ -38,7 +39,7 @@ namespace Keepr.Repositories
       _db.Execute(sql, new { Id });
     }
 
-    internal IEnumerable<VaultKeepViewModel> GetKeepsByVaultId(int id)
+    internal IEnumerable<VaultKeepViewModel> GetKeepsByVaultId(string userId, int vaultId)
     {
       string sql = @"
         SELECT 
@@ -48,7 +49,14 @@ namespace Keepr.Repositories
         INNER JOIN keeps k ON k.id = vk.keepId 
         WHERE (vaultId = @vaultId AND vk.userId = @userId) 
         ";
-      return _db.Query<VaultKeepViewModel>(sql, new { id });
+      return _db.Query<VaultKeepViewModel>(sql, new { userId, vaultId });
+    }
+
+    internal bool hasRelationship(DTOVaultKeep newVaultKeep)
+    {
+      string sql = "SELECT * FROM vaultkeeps WHERE vaultId = @VaultId AND userId = @UserId";
+      var found = _db.QueryFirstOrDefault<DTOVaultKeep>(sql, newVaultKeep);
+      return found != null;
     }
   }
 }
