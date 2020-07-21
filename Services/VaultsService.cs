@@ -17,10 +17,14 @@ namespace Keepr.Services
     {
       return _repo.GetMyVaults(userId);
     }
-    public Vault GetById(int id)
+    public Vault GetById(int id, string userId)
     {
       Vault foundVault = _repo.GetById(id);
       if (foundVault == null) { throw new Exception("Invalid id"); }
+      if (foundVault.UserId != userId)
+      {
+        throw new Exception("This is not your vault!");
+      }
       return foundVault;
     }
 
@@ -31,7 +35,7 @@ namespace Keepr.Services
 
     public string Delete(int id, string userId)
     {
-      Vault foundVault = GetById(id);
+      Vault foundVault = GetById(id, userId);
       if (foundVault.UserId != userId)
       {
         throw new Exception("This is not your Keep");

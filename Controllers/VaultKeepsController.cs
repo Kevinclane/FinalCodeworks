@@ -19,21 +19,7 @@ namespace Keepr.Controllers
       _vks = vks;
     }
 
-    [HttpGet]
-    public ActionResult<IEnumerable<VaultKeepViewModel>> Get([FromBody] int vaultId)
-    {
-      try
-      {
-        string userId = findUserInfo();
-        return Ok(_vks.GetKeepsByVaultId(userId, vaultId));
-      }
-      catch (System.Exception err)
-      {
-        return BadRequest(err.Message);
-      }
-    }
-
-    //POST
+    // POST
     [HttpPost]
 
 
@@ -56,7 +42,8 @@ namespace Keepr.Controllers
     {
       try
       {
-        return Ok(_vks.Delete(id));
+        string userId = findUserInfo();
+        return Ok(_vks.Delete(id, userId));
       }
       catch (Exception e)
       {
@@ -65,7 +52,12 @@ namespace Keepr.Controllers
     }
     string findUserInfo()
     {
-      return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+      var claim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+      if (claim != null)
+      {
+        return claim.Value;
+      }
+      return "";
     }
   }
 }

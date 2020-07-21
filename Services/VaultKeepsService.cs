@@ -26,16 +26,20 @@ namespace Keepr.Services
     }
     public DTOVaultKeep Create(DTOVaultKeep newVaultKeep)
     {
-      if (_repo.hasRelationship(newVaultKeep))
-      {
-        throw new Exception("This Vault already exists");
-      }
+      // if (_repo.hasRelationship(newVaultKeep))
+      // {
+      //   throw new Exception("This VaultKeep already exists");
+      // }
       return _repo.Create(newVaultKeep);
     }
 
-    public DTOVaultKeep Delete(int id)
+    public DTOVaultKeep Delete(int id, string userId)
     {
       DTOVaultKeep exists = Get(id);
+      if (exists.UserId != userId)
+      {
+        throw new Exception("This is now your VaultKeep!");
+      }
       _repo.Delete(id);
       return exists;
     }

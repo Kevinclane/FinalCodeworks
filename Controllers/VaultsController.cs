@@ -24,32 +24,6 @@ namespace Keepr.Controllers
       _vks = vks;
     }
 
-    [HttpGet("{id}/keeps")]
-    public ActionResult<IEnumerable<VaultKeepViewModel>> Get([FromBody] int vaultId)
-    {
-      try
-      {
-        string userId = findUserInfo();
-        return Ok(_vks.GetKeepsByVaultId(userId, vaultId));
-      }
-      catch (System.Exception err)
-      {
-        return BadRequest(err.Message);
-      }
-    }
-
-    [HttpGet("{Id}")]
-    public ActionResult<Vault> GetById(int Id)
-    {
-      try
-      {
-        return Ok(_vs.GetById(Id));
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e.Message);
-      }
-    }
 
     [HttpGet]
     public ActionResult<IEnumerable<Vault>> GetMyVault()
@@ -63,6 +37,35 @@ namespace Keepr.Controllers
       {
         return BadRequest(e.Message);
       };
+    }
+
+    [HttpGet("{Id}")]
+    public ActionResult<Vault> GetById(int Id)
+    {
+      try
+      {
+        string userId = findUserInfo();
+        return Ok(_vs.GetById(Id, userId));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+
+    [HttpGet("{vaultId}/keeps")]
+    public ActionResult<IEnumerable<VaultKeepViewModel>> Get(int vaultId)
+    {
+      try
+      {
+        string userId = findUserInfo();
+        return Ok(_vks.GetKeepsByVaultId(userId, vaultId));
+      }
+      catch (System.Exception err)
+      {
+        return BadRequest(err.Message);
+      }
     }
 
     [HttpPost]
@@ -95,7 +98,12 @@ namespace Keepr.Controllers
     }
     string findUserInfo()
     {
-      return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+      var claim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+      if (claim != null)
+      {
+        return claim.Value;
+      }
+      return "";
     }
 
   }
