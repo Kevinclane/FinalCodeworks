@@ -12,6 +12,21 @@ namespace Keepr.Models
     public int Shares { get; set; }
     public int Keeps { get; set; }
 
+    public Keep()
+    {
+
+    }
+    public Keep(string userId, string name, string description, string img, bool isPrivate, int views, int shares, int keeps)
+    {
+      UserId = userId;
+      Name = name;
+      Description = description;
+      Img = img;
+      IsPrivate = isPrivate;
+      Views = views;
+      Shares = shares;
+      Keeps = keeps;
+    }
   }
   public class VaultKeepViewModel : Keep
   {

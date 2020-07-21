@@ -24,13 +24,13 @@ namespace Keepr.Services
     {
       return _repo.GetKeepsByVaultId(userId, vaultId);
     }
-    public DTOVaultKeep Create(DTOVaultKeep newDTOVaultKeep)
+    public DTOVaultKeep Create(DTOVaultKeep newVaultKeep)
     {
-      if (_repo.hasRelationship(newDTOVaultKeep))
+      if (_repo.hasRelationship(newVaultKeep))
       {
         throw new Exception("This Vault already exists");
       }
-      return _repo.Create(newDTOVaultKeep);
+      return _repo.Create(newVaultKeep);
     }
 
     public DTOVaultKeep Delete(int id)

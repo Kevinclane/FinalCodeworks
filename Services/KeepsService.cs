@@ -20,6 +20,7 @@ namespace Keepr.Services
     public Keep GetById(int id)
     {
       Keep foundKeep = _repo.GetById(id);
+
       if (foundKeep == null) { throw new Exception("Invalid id"); }
       return foundKeep;
     }
@@ -65,7 +66,7 @@ namespace Keepr.Services
       Keep original = GetById(editKeep.Id);
       if (original.UserId != userId)
       {
-        throw new UnauthorizedAccessException("This is not your keep!");
+        throw new Exception("This is not your Keep!");
       }
       original.Name = editKeep.Name.Length > 0 ? editKeep.Name : original.Name;
       original.Description = editKeep.Description.Length > 0 ? editKeep.Description : original.Description;

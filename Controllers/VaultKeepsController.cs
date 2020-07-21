@@ -13,10 +13,10 @@ namespace Keepr.Controllers
   [Authorize]
   public class VaultKeepsController : ControllerBase
   {
-    private readonly VaultKeepsService _kvs;
-    public VaultKeepsController(VaultKeepsService kvs)
+    private readonly VaultKeepsService _vks;
+    public VaultKeepsController(VaultKeepsService vks)
     {
-      _kvs = kvs;
+      _vks = vks;
     }
 
     [HttpGet]
@@ -25,7 +25,7 @@ namespace Keepr.Controllers
       try
       {
         string userId = findUserInfo();
-        return Ok(_kvs.GetKeepsByVaultId(userId, vaultId));
+        return Ok(_vks.GetKeepsByVaultId(userId, vaultId));
       }
       catch (System.Exception err)
       {
@@ -37,12 +37,12 @@ namespace Keepr.Controllers
     [HttpPost]
 
 
-    public ActionResult<DTOVaultKeep> Create([FromBody] DTOVaultKeep newDTOVaultKeep)
+    public ActionResult<DTOVaultKeep> Create([FromBody] DTOVaultKeep newVaultKeep)
     {
       try
       {
-        newDTOVaultKeep.UserId = findUserInfo();
-        return Ok(_kvs.Create(newDTOVaultKeep));
+        newVaultKeep.UserId = findUserInfo();
+        return Ok(_vks.Create(newVaultKeep));
       }
       catch (System.Exception err)
       {
@@ -56,7 +56,7 @@ namespace Keepr.Controllers
     {
       try
       {
-        return Ok(_kvs.Delete(id));
+        return Ok(_vks.Delete(id));
       }
       catch (Exception e)
       {

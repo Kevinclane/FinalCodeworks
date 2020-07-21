@@ -21,9 +21,10 @@
         </form>
       </div>
     </div>
-    <div class="row d-flex justify-content-around">
+    <div class="row">
       <keep v-for="keep in keeps" :key="keep.id" :keep="keep" />
     </div>
+    <!-- d-flex justify-content-around -->
   </div>
 </template>
 
@@ -61,3 +62,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+/* .card-columns {
+  @include media-breakpoint-only(lg) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(xl) {
+    column-count: 5;
+  }
+} */
+</style>
