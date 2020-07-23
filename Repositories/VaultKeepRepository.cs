@@ -54,7 +54,7 @@ namespace Keepr.Repositories
 
     internal bool hasRelationship(DTOVaultKeep newVaultKeep)
     {
-      string sql = "SELECT * FROM vaultkeeps WHERE vaultId = @VaultId AND userId = @UserId";
+      string sql = "SELECT * FROM vaultkeeps WHERE vaultId = @VaultId AND keepId = @KeepId";
       var found = _db.QueryFirstOrDefault<DTOVaultKeep>(sql, newVaultKeep);
       return found != null;
     }

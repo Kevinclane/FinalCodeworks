@@ -1,54 +1,86 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid text-black my-3">
     <div class="row">
       <div class="col text-center mt-3 cardDesign">
         <img :src="keep.img" alt="error loading image" class="w-100 imgBorder" />
       </div>
     </div>
-    <div class="row bg-secondary roundBottom py-2">
+    <div class="row bg-secondary w-100 m-auto roundBottom py-2">
       <div class="col-6">
         <div class="pb-2">
           <h3 class="ml-2">{{keep.name}}</h3>
           <h3 class="ml-2">{{keep.description}}</h3>
           <h5 class="ml-2">Views: {{keep.views}}</h5>
-          <h5 class="ml-2">Shares: {{keep.shares}}</h5>
+          <h5 class="ml-2">Keeps: {{keep.keeps}}</h5>
         </div>
       </div>
-      <div class="col-3 offset-3 d-flex flex-column-reverse justify-content-end">
-        <button v-if="isCreator" class="btn btn-danger" @click="deleteKeep">Delete Keep</button>
+      <div class="col-3 offset-3 d-flex flex-flow-column-reverse align-items-end">
+        <button v-if="isCreator" class="btn btn-danger my-2 w-50" @click="deleteKeep">Delete Keep</button>
+        <div v-if="keep.isPrivate == true">
+          <p>
+            Current privacy:
+            <span class="color-red">Private</span>
+          </p>
+          <button @click="makePublic" class="btn btn-info my-2 w-100">Make public</button>
+        </div>
+        <div v-if="keep.isPrivate == false">
+          <p>
+            Current privacy:
+            <span class="color-green">Public</span>
+          </p>
+          <button @click="makePrivate" class="btn btn-info my-2 w-100">Make private</button>
+        </div>
       </div>
       <div class="col-12 text-center">
-        <button
+        <i
+          class="fa fa-heart fa-2x color-red"
+          aria-hidden="true"
           v-if="$auth.isAuthenticated"
-          class="btn btn-primary"
-          @click="showModal = true"
-        >Add to favorites</button>
+          type="button"
+          @click="showModal=true"
+        ></i>
       </div>
     </div>
     <transition name="fade" appear>
-      <div v-if="showModal" class="modal-overlay">
+      <div v-if="showModal" class="modal-overlay" id="vaultListModal">
         <div class="container-fluid text-center">
           <div class="row">
+            <i
+              class="fa fa-times fa-2x x-close color-red d-flex align-items-center"
+              type="button"
+              @click="showModal=false"
+              aria-hidden="true"
+            ></i>
             <div class="col">
               <div>
-                <h3>Create a new vault</h3>
+                <h3 class="text-black">Create a new vault</h3>
               </div>
               <div>
-                <form @submit.prevent="createNewVault" class="form-inline">
-                  <input v-model="newVault.name" type="text" id="name" placeholder="name" />
+                <form
+                  @submit.prevent="createNewVault"
+                  class="form-inline d-flex justify-content-center"
+                >
+                  <input
+                    v-model="newVault.name"
+                    type="text"
+                    id="name"
+                    placeholder="name"
+                    class="h-100 rounded"
+                  />
                   <input
                     v-model="newVault.description"
                     type="text"
                     id="description"
                     placeholder="description"
+                    class="h-100 rounded"
                   />
-                  <button>Submit</button>
+                  <button class="btn btn-success">Submit</button>
                 </form>
               </div>
             </div>
           </div>
           <div class="row">
-            <vault v-for="vault in vaults" :key="vault.id" :vault="vault" />
+            <vault v-for="vault in vaults" :key="vault.id" :vault="vault" :closeModal="addToVault" />
           </div>
         </div>
       </div>
@@ -63,17 +95,11 @@ export default {
   data() {
     return {
       showModal: false,
-      newVault: {}
+      newVault: {},
     };
   },
   mounted() {
-    // debugger;
     this.$store.dispatch("getActiveKeep", this.$route.params.keepId);
-    // this.$store.dispatch("setUser", this.$auth.user);
-    // if (this.user) {
-    //   this.$store.dispatch("getMyVaults");
-    // }
-    console.log(this.$auth.user);
   },
   computed: {
     keep() {
@@ -90,7 +116,7 @@ export default {
     },
     auth() {
       return this.$auth.user;
-    }
+    },
   },
   methods: {
     favorite() {
@@ -106,23 +132,48 @@ export default {
         text: "Click 'Ok' to confirm you wish to delete this keep.",
         icon: "warning",
         buttons: true,
-        dangerMode: true
-      }).then(willDelete => {
+        dangerMode: true,
+      }).then((willDelete) => {
         if (willDelete) {
           let data = this.$store.dispatch("deleteKeep", this.keep.id);
           swal("Your keep has been deleted!", {
-            icon: "success"
+            icon: "success",
           });
           this.edit = false;
         } else {
           swal("Deletion cancelled");
         }
       });
-    }
+    },
+    addToVault: function (response, bool) {
+      if (bool == true) {
+        swal({
+          title: response,
+          icon: "warning",
+          button: "close",
+          dangerMode: true,
+        });
+      } else if (bool == false) {
+        swal({
+          title: response,
+          icon: "success",
+          button: "close",
+        });
+        this.showModal = false;
+      }
+    },
+    makePublic() {
+      this.keep.isPrivate = false;
+      this.$store.dispatch("editKeep", this.keep);
+    },
+    makePrivate() {
+      this.keep.isPrivate = true;
+      this.$store.dispatch("editKeep", this.keep);
+    },
   },
   components: {
-    Vault
-  }
+    Vault,
+  },
 };
 </script>
 <style scoped>
@@ -142,14 +193,33 @@ export default {
 .modal-overlay {
   position: fixed;
   top: 10vh;
-  left: 10vw;
+  left: 30vw;
   bottom: 10vh;
-  right: 10vw;
+  right: 30vw;
   z-index: 100;
   border-radius: 20px;
   max-height: 80vh;
-  background-color: lightgoldenrodyellow;
+  background-color: #444;
   overflow-y: auto;
   overflow-x: hidden;
+  border: 4px solid black;
+}
+.color-red {
+  color: red;
+}
+.color-green {
+  color: green;
+}
+.text-black {
+  color: black;
+}
+.x-close {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  z-index: 100;
+}
+.flex-flow-column-reverse {
+  flex-flow: column-reverse;
 }
 </style>

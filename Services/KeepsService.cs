@@ -54,9 +54,9 @@ namespace Keepr.Services
       }
     }
 
-    public Keep GetByUserId(string userId)
+    public IEnumerable<Keep> GetByUserId(string userId)
     {
-      Keep foundKeep = _repo.GetByUserId(userId);
+      IEnumerable<Keep> foundKeep = _repo.GetByUserId(userId);
       if (foundKeep == null)
       {
         throw new Exception("Invalid UserId");
@@ -91,6 +91,25 @@ namespace Keepr.Services
         original.Views = editKeep.Views;
       }
       return _repo.Edit(original);
+    }
+
+    public Keep EditCounts(Keep editKeep)
+    {
+      string userId = "";
+      Keep original = GetById(editKeep.Id, userId);
+      if (original.Keeps != editKeep.Keeps)
+      {
+        original.Keeps = editKeep.Keeps;
+      }
+      if (original.Shares != editKeep.Shares)
+      {
+        original.Shares = editKeep.Shares;
+      }
+      if (original.Views != editKeep.Views)
+      {
+        original.Views = editKeep.Views;
+      }
+      return _repo.EditCounts(original);
     }
   }
 }

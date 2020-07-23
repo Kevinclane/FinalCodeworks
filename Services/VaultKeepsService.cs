@@ -20,16 +20,18 @@ namespace Keepr.Services
       if (exists == null) { throw new Exception("Invalid Vault Keep"); }
       return exists;
     }
+
     public IEnumerable<VaultKeepViewModel> GetKeepsByVaultId(string userId, int vaultId)
     {
       return _repo.GetKeepsByVaultId(userId, vaultId);
     }
+
     public DTOVaultKeep Create(DTOVaultKeep newVaultKeep)
     {
-      // if (_repo.hasRelationship(newVaultKeep))
-      // {
-      //   throw new Exception("This VaultKeep already exists");
-      // }
+      if (_repo.hasRelationship(newVaultKeep))
+      {
+        throw new Exception("This Keep already exists in this vault!");
+      }
       return _repo.Create(newVaultKeep);
     }
 
@@ -38,12 +40,10 @@ namespace Keepr.Services
       DTOVaultKeep exists = Get(id);
       if (exists.UserId != userId)
       {
-        throw new Exception("This is now your VaultKeep!");
+        throw new Exception("This is not your VaultKeep!");
       }
       _repo.Delete(id);
       return exists;
     }
-
-
   }
 }

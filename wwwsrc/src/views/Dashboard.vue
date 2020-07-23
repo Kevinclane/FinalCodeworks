@@ -1,69 +1,45 @@
 <template>
-  <div class="dashboard">
-    <h1>WELCOME TO YOUR DASHBOARD</h1>
-    <button @click="showVaultModal = true" class="btn btn-primary">Vaults</button>
-    <transition name="fade" appear>
-      <div v-if="showVaultModal" class="modal-overlay">
-        <div class="container-fluid text-center">
-          <div class="row">
-            <i
-              class="fa fa-times x-close d-flex align-items-center mt-1"
-              type="button"
-              @click="showVaultModal = false"
-            ></i>
-            <div class="col">
-              <div>
-                <h3>Create a new vault</h3>
-              </div>
-              <div>
-                <form @submit.prevent="createNewVault" class="form-inline">
-                  <input
-                    class="rounded"
-                    v-model="newVault.name"
-                    type="text"
-                    id="name"
-                    placeholder="name"
-                  />
-                  <input
-                    class="rounded"
-                    v-model="newVault.description"
-                    type="text"
-                    id="description"
-                    placeholder="description"
-                  />
-                  <button class="btn btn-success">Submit</button>
-                </form>
-              </div>
+  <div class="dashboard container">
+    <div class="row my-3">
+      <div class="col-12">
+        <h1 class="text-center">WELCOME TO YOUR DASHBOARD</h1>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-3">
+        <div class="row bg-secondary p-3 roundedCstm">
+          <h3 class="col-12 text-center">Your Vaults</h3>
+          <vault v-for="vault in vaults" :key="vault.id" :vault="vault" />
+        </div>
+      </div>
+      <div class="col-8 offset-1 bg-secondary p-3 roundedCstm">
+        <div class="row">
+          <div class="col-12">
+            <h3 class="text-center">Your Keeps</h3>
+            <div class="card-columns">
+              <keep v-for="keep in myKeeps" :key="keep.id" :keep="keep" />
             </div>
-          </div>
-          <div class="row">
-            <vault v-for="vault in vaults" :key="vault.id" :vault="vault" />
           </div>
         </div>
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
 <script>
-import Vault from "@/components/VaultListComponent.vue";
+import Keep from "@/components/KeepComponent.vue";
+import Vault from "@/components/DashVaultComponent.vue";
 export default {
   name: "Dashboard",
   data() {
     return {
-      showVaultModal: false,
       newVault: {}
     };
   },
-  mounted() {
-    this.$store.dispatch("getPublicKeeps");
-  },
+  mounted() {},
   computed: {
-    userKeeps() {
+    myKeeps() {
       return this.$store.state.myKeeps;
-    },
-    publicKeeps() {
-      return this.$store.state.publicKeeps;
     },
     user() {
       return this.$store.state.user;
@@ -79,7 +55,8 @@ export default {
     }
   },
   components: {
-    Vault
+    Vault,
+    Keep
   }
 };
 </script>
@@ -104,5 +81,9 @@ export default {
   right: 8px;
   color: red;
   z-index: 101;
+}
+.roundedCstm {
+  border-radius: 20px;
+  border: 2px solid black;
 }
 </style>

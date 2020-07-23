@@ -28,3 +28,5 @@ export default {
 @import "bootstrap";
 @import "./assets/_overrides.scss";
 </style>
+<style>
+</style>

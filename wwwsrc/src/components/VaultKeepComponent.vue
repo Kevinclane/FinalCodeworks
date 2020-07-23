@@ -16,14 +16,43 @@
           </p>
         </div>
       </router-link>
+      <div class="col-12 text-center my-2">
+        <button @click="deleteKeepFromVault" class="btn btn-danger">Remove from Vault</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import swal from "sweetalert";
 export default {
   name: "KeepComponent",
-  props: ["keep"]
+  props: ["keep"],
+  methods: {
+    deleteKeepFromVault() {
+      swal({
+        title: "Are you sure?",
+        text:
+          "Click 'Ok' to confirm you wish to remove this keep from this vault.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+      }).then(willDelete => {
+        if (willDelete) {
+          let data = this.$store.dispatch(
+            "deleteKeepFromVault",
+            this.keep.vaultKeepId
+          );
+          swal("Your keep has been removed!", {
+            icon: "success"
+          });
+          this.edit = false;
+        } else {
+          swal("Deletion cancelled");
+        }
+      });
+    }
+  }
 };
 </script>
 <style scoped>

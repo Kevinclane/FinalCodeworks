@@ -46,10 +46,10 @@ namespace Keepr.Repositories
       return affectedRows == 1;
     }
 
-    internal Keep GetByUserId(string userId)
+    internal IEnumerable<Keep> GetByUserId(string userId)
     {
-      string sql = "SELECT * FROM keeps WHERE userId = @userId";
-      return _db.QueryFirstOrDefault<Keep>(sql, new { userId });
+      string sql = "SELECT * FROM keeps WHERE userId = @UserId";
+      return _db.Query<Keep>(sql, new { userId });
     }
 
     internal Keep Edit(Keep original)
@@ -61,6 +61,18 @@ namespace Keepr.Repositories
             description = @Description,
             img = @Img,
             isPrivate = @IsPrivate,
+            views = @Views,
+            shares = @Shares,
+            keeps = @Keeps
+        WHERE id = @Id;
+        SELECT * FROM keeps WHERE id = @id;";
+      return _db.QueryFirstOrDefault<Keep>(sql, original);
+    }
+    internal Keep EditCounts(Keep original)
+    {
+      string sql = @"
+        UPDATE keeps
+        SET
             views = @Views,
             shares = @Shares,
             keeps = @Keeps

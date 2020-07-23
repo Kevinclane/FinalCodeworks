@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-light bg-primary sticky-top borderBottomCstm">
     <router-link class="navbar-brand" :to="{ name: 'home' }">Keepr</router-link>
     <button
       class="navbar-toggler"
@@ -59,4 +59,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.borderBottomCstm {
+  border-bottom: 2px solid black;
+}
+</style>
