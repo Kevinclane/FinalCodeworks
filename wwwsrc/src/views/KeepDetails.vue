@@ -16,14 +16,14 @@
       </div>
       <div class="col-3 offset-3 d-flex flex-flow-column-reverse align-items-end">
         <button v-if="isCreator" class="btn btn-danger my-2 w-50" @click="deleteKeep">Delete Keep</button>
-        <div v-if="keep.isPrivate == true">
+        <div v-if="keep.isPrivate == true && isCreator">
           <p>
             Current privacy:
             <span class="color-red">Private</span>
           </p>
           <button @click="makePublic" class="btn btn-info my-2 w-100">Make public</button>
         </div>
-        <div v-if="keep.isPrivate == false">
+        <div v-if="keep.isPrivate == false && isCreator">
           <p>
             Current privacy:
             <span class="color-green">Public</span>
@@ -95,7 +95,7 @@ export default {
   data() {
     return {
       showModal: false,
-      newVault: {},
+      newVault: {}
     };
   },
   mounted() {
@@ -116,7 +116,7 @@ export default {
     },
     auth() {
       return this.$auth.user;
-    },
+    }
   },
   methods: {
     favorite() {
@@ -132,12 +132,12 @@ export default {
         text: "Click 'Ok' to confirm you wish to delete this keep.",
         icon: "warning",
         buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
+        dangerMode: true
+      }).then(willDelete => {
         if (willDelete) {
           let data = this.$store.dispatch("deleteKeep", this.keep.id);
           swal("Your keep has been deleted!", {
-            icon: "success",
+            icon: "success"
           });
           this.edit = false;
         } else {
@@ -145,19 +145,19 @@ export default {
         }
       });
     },
-    addToVault: function (response, bool) {
+    addToVault: function(response, bool) {
       if (bool == true) {
         swal({
           title: response,
           icon: "warning",
           button: "close",
-          dangerMode: true,
+          dangerMode: true
         });
       } else if (bool == false) {
         swal({
           title: response,
           icon: "success",
-          button: "close",
+          button: "close"
         });
         this.showModal = false;
       }
@@ -169,11 +169,11 @@ export default {
     makePrivate() {
       this.keep.isPrivate = true;
       this.$store.dispatch("editKeep", this.keep);
-    },
+    }
   },
   components: {
-    Vault,
-  },
+    Vault
+  }
 };
 </script>
 <style scoped>
