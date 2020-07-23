@@ -126,7 +126,6 @@ export default new Vuex.Store({
     },
     async updateKeepCount({ }, keep) {
       let res = await api.put("keeps/" + keep.id + "/counts", keep)
-      console.log(res.data)
     },
     async getKeepsByVaultId({ commit }, vaultId) {
       try {
