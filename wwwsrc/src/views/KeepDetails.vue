@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid text-black my-3">
+  <div class="container text-black my-3">
     <div class="row">
       <div class="col text-center mt-3 cardDesign">
         <img :src="keep.img" alt="error loading image" class="w-100 imgBorder" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="home container-fluid bg-secondary">
+  <div class="home container bg-secondary">
     <div class="row">
       <div class="col text-center">
         <h1>Welcome to the Vault of Keeps</h1>
@@ -51,7 +51,7 @@ export default {
   name: "home",
   data() {
     return {
-      newKeep: {}
+      newKeep: {},
     };
   },
   mounted() {
@@ -63,7 +63,7 @@ export default {
     },
     keeps() {
       return this.$store.state.publicKeeps;
-    }
+    },
   },
   methods: {
     logout() {
@@ -72,11 +72,11 @@ export default {
     createNewKeep() {
       this.$store.dispatch("createNewKeep", this.newKeep);
       this.newKeep = {};
-    }
+    },
   },
   components: {
-    Keep
-  }
+    Keep,
+  },
 };
 </script>
 
