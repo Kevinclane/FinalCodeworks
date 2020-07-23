@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <div v-if="isCreator" class="row">
       <div class="col-12">
         <div class="card-columns mt-3">
@@ -34,12 +34,12 @@ export default {
     },
     isCreator() {
       return this.$store.state.activeVault.userId == this.$store.state.user.sub;
-    }
+    },
   },
   methods: {},
   components: {
-    Keep
-  }
+    Keep,
+  },
 };
 </script>
 
